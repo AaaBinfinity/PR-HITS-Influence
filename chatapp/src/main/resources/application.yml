@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:mysql://1.92.109.205:3306/chat_app?serverTimezone=UTC
+    username: orlando
+    password: Anchor_Mar25
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
