@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media API Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .form-container {
+            margin: 20px;
+        }
+        .form-container input {
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Social Media API Demo</h1>
+
+    <!-- 用户注册 -->
+    <div class="form-container">
+        <h2>用户注册</h2>
+        <form id="registerForm">
+            <input type="text" id="username" placeholder="用户名" required><br>
+            <input type="password" id="password" placeholder="密码" required><br>
+            <button type="submit">注册</button>
+        </form>
+        <div id="registerResult"></div>
+    </div>
+
+    <!-- 用户登录 -->
+    <div class="form-container">
+        <h2>用户登录</h2>
+        <form id="loginForm">
+            <input type="text" id="loginUsername" placeholder="用户名" required><br>
+            <input type="password" id="loginPassword" placeholder="密码" required><br>
+            <button type="submit">登录</button>
+        </form>
+        <div id="loginResult"></div>
+    </div>
+
+    <!-- 添加好友 -->
+    <div class="form-container">
+        <h2>添加好友</h2>
+        <form id="addFriendForm">
+            <input type="text" id="friendUsername" placeholder="好友用户名" required><br>
+            <button type="submit">添加好友</button>
+        </form>
+        <div id="addFriendResult"></div>
+    </div>
+
+    <!-- 获取好友列表 -->
+    <div class="form-container">
+        <h2>获取好友列表</h2>
+        <button id="getFriendsBtn">查看好友列表</button>
+        <div id="friendsList"></div>
+    </div>
+
+    <!-- 发送消息 -->
+    <div class="form-container">
+        <h2>发送消息</h2>
+        <form id="sendMessageForm">
+            <input type="text" id="receiver" placeholder="接收者用户名" required><br>
+            <input type="text" id="messageContent" placeholder="消息内容" required><br>
+            <button type="submit">发送消息</button>
+        </form>
+        <div id="sendMessageResult"></div>
+    </div>
+
+    <script>
+        const apiUrl = 'http://1.92.109.205:8080';
+
+        // 用户注册
+        document.getElementById('registerForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            const response = await fetch(`${apiUrl}/auth/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password })
+            });
+
+            const result = await response.json();
+            document.getElementById('registerResult').innerText = result.message || result.error;
+        });
+
+        // 用户登录
+        document.getElementById('loginForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+
+            const response = await fetch(`${apiUrl}/auth/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password })
+            });
+
+            const result = await response.json();
+            if (result.token) {
+                document.getElementById('loginResult').innerText = '登录成功，令牌: ' + result.token;
+            } else {
+                document.getElementById('loginResult').innerText = result.error;
+            }
+        });
+
+        // 添加好友
+        document.getElementById('addFriendForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const username = document.getElementById('loginUsername').value;
+            const friendUsername = document.getElementById('friendUsername').value;
+
+            const response = await fetch(`${apiUrl}/friends/add?username=${username}&friendUsername=${friendUsername}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                }
+            });
+
+            const result = await response.text();
+            document.getElementById('addFriendResult').innerText = result;
+        });
+
+        // 获取好友列表
+        document.getElementById('getFriendsBtn').addEventListener('click', async () => {
+            const username = document.getElementById('loginUsername').value;
+
+            const response = await fetch(`${apiUrl}/friends/list?username=${username}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            const result = await response.json();
+            document.getElementById('friendsList').innerText = result.join(', ') || '没有好友';
+        });
+
+        // 发送消息
+        document.getElementById('sendMessageForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const sender = document.getElementById('loginUsername').value;
+            const receiver = document.getElementById('receiver').value;
+            const content = document.getElementById('messageContent').value;
+
+            const response = await fetch(`${apiUrl}/chat/send`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ sender, receiver, content })
+            });
+
+            const result = await response.json();
+            if (result.message) {
+                document.getElementById('sendMessageResult').innerText = result.message;
+            } else {
+                document.getElementById('sendMessageResult').innerText = result.error;
+            }
+        });
+    </script>
+
+</body>
+</html>
