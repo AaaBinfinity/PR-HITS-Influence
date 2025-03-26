@@ -4,6 +4,8 @@ spring:
     username: orlando
     password: Anchor_Mar25
     driver-class-name: com.mysql.cj.jdbc.Driver
+
   jpa:
     hibernate:
       ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQL8Dialect
