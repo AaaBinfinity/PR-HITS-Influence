@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>聊天系统测试</title>
+    <script>
+        async function register() {
+            const username = document.getElementById("regUsername").value;
+            const password = document.getElementById("regPassword").value;
+
+            const response = await fetch("http://1.92.109.205:8080/auth/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ username, password })
+            });
+
+            const data = await response.json();
+            document.getElementById("registerResult").innerText = JSON.stringify(data, null, 2);
+        }
+
+        async function login() {
+            const username = document.getElementById("loginUsername").value;
+            const password = document.getElementById("loginPassword").value;
+
+            const response = await fetch("http://1.92.109.205:8080/auth/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ username, password })
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                document.getElementById("loginResult").innerText = "登录成功，JWT Token: " + data.token;
+                localStorage.setItem("jwt", data.token); // 存储 JWT 令牌
+            } else {
+                document.getElementById("loginResult").innerText = "登录失败：" + data.error;
+            }
+        }
+
+        async function testProtected() {
+            const token = localStorage.getItem("jwt");
+            if (!token) {
+                alert("请先登录！");
+                return;
+            }
+
+            const response = await fetch("http://1.92.109.205:8080/auth/protected", {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            });
+
+            const data = await response.json();
+            document.getElementById("protectedResult").innerText = JSON.stringify(data, null, 2);
+        }
+    </script>
+</head>
+<body>
+    <h2>用户注册</h2>
+    <label>用户名:</label> <input type="text" id="regUsername"><br>
+    <label>密码:</label> <input type="password" id="regPassword"><br>
+    <button onclick="register()">注册</button>
+    <pre id="registerResult"></pre>
+
+    <h2>用户登录</h2>
+    <label>用户名:</label> <input type="text" id="loginUsername"><br>
+    <label>密码:</label> <input type="password" id="loginPassword"><br>
+    <button onclick="login()">登录</button>
+    <pre id="loginResult"></pre>
+
+    <h2>测试受保护接口</h2>
+    <button onclick="testProtected()">访问受保护资源</button>
+    <pre id="protectedResult"></pre>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat App - Friend Feature Test</title>
+    <script>
+        // 添加好友
+        function addFriend() {
+            const username = document.getElementById("username").value;
+            const friendUsername = document.getElementById("friendUsername").value;
+            
+            fetch('http://1.92.109.205:8080/friends/add?username=' + username + '&friendUsername=' + friendUsername, {
+                method: 'POST',
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message || data.error || "好友添加成功！");
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("添加好友失败！");
+            });
+        }
+
+        // 获取好友列表
+        function getFriends() {
+            const username = document.getElementById("getUsername").value;
+
+            fetch('http://1.92.109.205:8080/friends/list?username=' + username)
+            .then(response => response.json())
+            .then(data => {
+                const friendsList = document.getElementById("friendsList");
+                friendsList.innerHTML = ""; // 清空当前列表
+                if (Array.isArray(data)) {
+                    data.forEach(friend => {
+                        const li = document.createElement("li");
+                        li.textContent = friend;
+                        friendsList.appendChild(li);
+                    });
+                } else {
+                    friendsList.innerHTML = "无好友数据";
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("获取好友列表失败！");
+            });
+        }
+    </script>
+</head>
+<body>
+
+    <h1>Chat App - Friend Feature Test</h1>
+
+    <h2>添加好友</h2>
+    <label for="username">用户名:</label>
+    <input type="text" id="username" placeholder="输入你的用户名">
+    <br><br>
+    <label for="friendUsername">好友用户名:</label>
+    <input type="text" id="friendUsername" placeholder="输入好友用户名">
+    <br><br>
+    <button onclick="addFriend()">添加好友</button>
+
+    <hr>
+
+    <h2>获取好友列表</h2>
+    <label for="getUsername">用户名:</label>
+    <input type="text" id="getUsername" placeholder="输入你的用户名">
+    <br><br>
+    <button onclick="getFriends()">获取好友列表</button>
+    <br><br>
+    <ul id="friendsList">
+        <!-- 好友列表将显示在这里 -->
+    </ul>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>聊天测试</title>
+</head>
+<body>
+    <h2>发送消息</h2>
+    <label>发送者: <input type="text" id="sender"></label>
+    <label>接收者: <input type="text" id="receiver"></label>
+    <label>消息内容: <input type="text" id="content"></label>
+    <button onclick="sendMessage()">发送</button>
+    <p id="sendStatus"></p>
+
+
+    <script>
+        async function sendMessage() {
+            const sender = document.getElementById("sender").value;
+            const receiver = document.getElementById("receiver").value;
+            const content = document.getElementById("content").value;
+
+            try {
+                const response = await fetch("http://1.92.109.205:8080/chat/send", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ sender, receiver, content })
+                });
+
+                const data = await response.json();
+                document.getElementById("sendStatus").innerText = data.message || "发送失败";
+            } catch (error) {
+                console.error("Error:", error);
+                document.getElementById("sendStatus").innerText = "请求失败：" + error.message;
+            }
+        }
+
+        
+    </script>
+</body>
+</html>
