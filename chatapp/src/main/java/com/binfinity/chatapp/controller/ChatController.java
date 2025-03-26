@@ -36,16 +36,4 @@ public class ChatController {
         }
     }
 
-    @GetMapping("/history")
-    public ResponseEntity<List<Message>> getChatHistory(@RequestParam String user1, @RequestParam String user2) {
-        try {
-            // 获取聊天历史
-            List<Message> chatHistory = messageService.getChatHistory(user1, user2);
-            return ResponseEntity.ok(chatHistory);
-        } catch (Exception e) {
-            // 捕获异常并返回错误信息
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(null);
-        }
-    }
 }
