@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>社交关系可视化</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>社交关系可视化</h1>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('show_social_network') }}">📈📈📈 社交关系网络</a></li>
+            <li><a href="{{ url_for('show_messages') }}">💬💬💬 消息互动网络</a></li>
+            <li><a href="{{ url_for('show_friend_distribution') }}">👍👍👍 好友量分布</a></li>
+        </ul>
+        </br>
+
+        </br>
+
+
+    </nav>
+<button id="back-button" onclick="window.location.href='http://120.26.87.54/binfinity-social-media-app/index.html'">🔙 BACK</button>
+
+</body>
+</html>

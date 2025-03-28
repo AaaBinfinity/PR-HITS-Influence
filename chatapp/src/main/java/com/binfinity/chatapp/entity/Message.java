@@ -1,5 +1,6 @@
 package com.binfinity.chatapp.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,10 +18,12 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "sender_id", nullable = false)
     private User sender;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "receiver_id", nullable = false)
     private User receiver;

@@ -30,3 +30,4 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "friend_id"))
     private Set<User> friends = new HashSet<>();
 }
+

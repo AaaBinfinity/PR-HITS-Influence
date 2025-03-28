@@ -1,0 +1,195 @@
+@import url('css2.css');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    background: linear-gradient(to right, #eef2f3, #dfe9f3);
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* 顶部标题 */
+h1 {
+    background: linear-gradient(135deg, #3498db, #6dd5fa);
+    color: white;
+    padding: 20px;
+    margin: 0;
+    font-size: 28px;
+    font-weight: 600;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    animation: float 3s ease-in-out infinite;
+}
+
+/* 标题轻微浮动 */
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+/* 导航栏 */
+nav {
+    margin: 20px 0;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin: 0 15px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    font-size: 18px;
+    color: white;
+    font-weight: 600;
+    padding: 12px 20px;
+    border-radius: 30px;
+    transition: 0.4s;
+    background: linear-gradient(135deg, #3498db, #6dd5fa);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+}
+
+nav ul li a:hover {
+    background: linear-gradient(135deg, #2980b9, #5499c7);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* 按钮点击波纹 */
+nav ul li a:active, #back-button:active {
+    transform: scale(0.95);
+}
+
+/* 返回按钮 */
+#back-button {
+    display: inline-block;
+    margin: 20px;
+    padding: 12px 25px;
+    font-size: 16px;
+    background: linear-gradient(135deg, #e74c3c, #ff6b6b);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: 0.4s;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+#back-button:hover {
+    background: linear-gradient(135deg, #c0392b, #e74c3c);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* 图表容器 */
+#chart {
+    width: 90%;
+    height: 700px;
+    margin: 20px auto;
+    border-radius: 15px;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transform: scale(0.8);
+    animation: fadeInScale 1s ease-out forwards;
+    animation-delay: 0.8s;  /* 延迟加载ECharts动画 */
+}
+
+
+/* 图表放大动画 */
+@keyframes fadeInScale {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+#chart:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* 排行榜容器 */
+#top10-container {
+    margin-top: 20px;
+    padding: 20px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 50%;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 1s ease-out forwards 0.5s;
+}
+
+/* 排行榜淡入动画 */
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#top10-list {
+    text-align: center;
+    padding-left: 0;
+    list-style: none;
+    width: 100%;
+}
+
+#top10-list li {
+    padding: 10px;
+    font-size: 18px;
+    border-bottom: 1px solid #ddd;
+    width: 80%;
+    margin: 0 auto;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeInUp 0.5s ease-out forwards;
+}
+
+/* 让列表项逐个出现 */
+#top10-list li:nth-child(1) { animation-delay: 0.6s; }
+#top10-list li:nth-child(2) { animation-delay: 0.7s; }
+#top10-list li:nth-child(3) { animation-delay: 0.8s; }
+#top10-list li:nth-child(4) { animation-delay: 0.9s; }
+#top10-list li:nth-child(5) { animation-delay: 1s; }
+#top10-list li:nth-child(6) { animation-delay: 1.1s; }
+#top10-list li:nth-child(7) { animation-delay: 1.2s; }
+#top10-list li:nth-child(8) { animation-delay: 1.3s; }
+#top10-list li:nth-child(9) { animation-delay: 1.4s; }
+#top10-list li:nth-child(10) { animation-delay: 1.5s; }
+
+#top10-container h2 {
+    color: #e74c3c;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+/* 使所有文字平滑过渡 */
+* {
+    transition: all 0.3s ease;
+}

@@ -1,0 +1,7 @@
+mysql-connector-python
+pandas~=2.2.3
+networkx~=3.4.2
+matplotlib~=3.10.1
+seaborn~=0.13.2
+sqlalchemy~=2.0.39
+numpy~=2.2.3

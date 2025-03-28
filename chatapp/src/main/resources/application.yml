@@ -4,6 +4,8 @@ spring:
     username: orlando
     password: Anchor_Mar25
     driver-class-name: com.mysql.cj.jdbc.Driver
+  jackson:
+    time-zone: Asia/Shanghai
 
   jpa:
     hibernate:

@@ -34,21 +34,18 @@ public class MessageService {
         return messageRepository.save(message);
     }
 
-    // Get chat history between two users
-    public List<Message> getChatHistory(String user1, String user2) {
-        User sender = userService.findByUsername(user1);
-        User receiver = userService.findByUsername(user2);
+    // 获取单向的聊天记录（发送者到接收者）
+    public List<Message> getChatHistory(String senderUsername, String receiverUsername) {
+        User sender = userService.findByUsername(senderUsername);
+        User receiver = userService.findByUsername(receiverUsername);
 
-        // Get messages from sender to receiver and receiver to sender
+        // 获取从发送者到接收者的消息
         List<Message> messagesFromSenderToReceiver = messageRepository.findBySenderAndReceiver(sender, receiver);
-        List<Message> messagesFromReceiverToSender = messageRepository.findBySenderAndReceiver(receiver, sender);
 
-        // Combine both message lists
-        messagesFromSenderToReceiver.addAll(messagesFromReceiverToSender);
-
-        // Sort by timestamp (if needed, depends on your sorting method)
+        // 排序消息（根据时间戳）
         messagesFromSenderToReceiver.sort((m1, m2) -> m1.getTimestamp().compareTo(m2.getTimestamp()));
 
         return messagesFromSenderToReceiver;
     }
+
 }
