@@ -53,8 +53,8 @@ document.addEventListener("DOMContentLoaded", function () {
                         position: "right",
                         formatter: "{b}"
                     },
-                    edgeSymbol: ["circle", "arrow"],
-                    edgeSymbolSize: [4, 10],
+                    edgeSymbol: ["circle"],  // 只保留圆形，去掉箭头
+                    edgeSymbolSize: [4],  // 设置边缘符号大小
                     categories: categories,
                     data: data.nodes.map(n => ({
                         name: n.username,
@@ -71,6 +71,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     }))
                 }]
             };
+
             chart.setOption(option);
         })
         .catch(error => console.error("数据加载失败:", error));

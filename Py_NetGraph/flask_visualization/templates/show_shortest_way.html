@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>社交关系可视化 🔹 社交关系网络</title>
+    <script src="{{ url_for('static', filename='echarts.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+<h1>社交关系可视化 🔹 社交关系网络</h1>
+
+<!-- 返回按钮 -->
+<button id="back-button" onclick="window.location.href='{{ url_for('index') }}'">🔙 BACK</button>
+
+<!-- 用户输入 -->
+<div>
+    <label for="start-user">起始用户名：</label>
+    <input type="text" id="start-user" placeholder="请输入起始用户名">
+    <label for="end-user">目标用户名：</label>
+    <input type="text" id="end-user" placeholder="请输入目标用户名">
+    <button id="find-path-btn">查询最短路径</button>
+
+    <a href="{{ url_for('show_shortest_way') }}">刷新</a>
+</div>
+
+<!-- ECharts 图表 -->
+<div id="chart"></div>
+
+<script src="{{ url_for('static', filename='show_shortest_way.js') }}"></script>
+</body>
+</html>

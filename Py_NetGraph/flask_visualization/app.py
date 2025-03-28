@@ -1,5 +1,5 @@
-from flask import Flask, jsonify, render_template
-from analysis import analyze_friends, analyze_messages, analyze_friend_distribution, analyze_by_timestamp
+from flask import Flask, jsonify, render_template, request
+from analysis import analyze_friends, analyze_messages, analyze_friend_distribution, analyze_by_timestamp, analyze_Djs
 
 app = Flask(__name__)
 @app.route('/')
@@ -20,6 +20,18 @@ def show_friend_distribution():
     """渲染前端页面"""
     return render_template('show_friend_distribution.html')
 
+
+@app.route('/show_shortest_way')
+def show_shortest_way():
+    return render_template("show_shortest_way.html")
+
+
+@app.route('/api/shortest_path', methods=['GET'])
+def shortest_path():
+    start_user = request.args.get('start_user')
+    end_user =request.args.get('end_user')
+    result = analyze_Djs(start_user, end_user)
+    return jsonify(result)
 
 
 @app.route('/api/social_network', methods=['GET'])
