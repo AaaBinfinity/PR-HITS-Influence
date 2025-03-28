@@ -4,11 +4,6 @@ document.addEventListener("DOMContentLoaded", function () {
     fetch("/api/social_network")
         .then(response => response.json())
         .then(data => {
-            let categories = [
-                { name: "活跃用户" },
-                { name: "普通用户" }
-            ];
-
             let option = {
                 title: {
                     text: "社交关系网络",
@@ -23,10 +18,6 @@ document.addEventListener("DOMContentLoaded", function () {
                         }
                         return `连接: ${params.data.source} ↔ ${params.data.target}`;
                     }
-                },
-                legend: {
-                    data: categories.map(c => c.name),
-                    left: "right"
                 },
                 series: [{
                     type: "graph",
@@ -44,13 +35,11 @@ document.addEventListener("DOMContentLoaded", function () {
                     },
                     edgeSymbol: ["circle"],
                     edgeSymbolSize: [4, 10],
-                    categories: categories,
                     data: data.nodes.map(n => ({
                         name: n.username,
                         id: n.id,
                         symbolSize: n.size / 100,
                         itemStyle: { color: n.color },
-                        category: n.degree > 5 ? 0 : 1,  // 🎯 这里根据好友数区分类别
                         username: n.username,
                         degree: n.degree
                     })),
@@ -63,17 +52,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
             chart.setOption(option);
 
-            // 查询最短路径
             document.getElementById("find-path-btn").addEventListener("click", function() {
                 let startUser = document.getElementById("start-user").value;
                 let endUser = document.getElementById("end-user").value;
 
-                // 请求后端获取路径
                 fetch(`/api/shortest_path?start_user=${startUser}&end_user=${endUser}`)
                     .then(response => response.json())
                     .then(result => {
                         if (result.path) {
                             highlightPath(result.path);
+                            document.getElementById("result").innerHTML = `
+                                <p>路径: ${result.path.join(" -> ")}</p>
+                                <p>步骤数: ${result.steps} 步</p>
+                            `;
                         } else {
                             alert(result.error || "未找到路径");
                         }
@@ -83,38 +74,64 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // 高亮显示路径
             function highlightPath(path) {
-                // 清空所有节点的高亮
-                option.series[0].data.forEach(node => node.itemStyle = { color: node.color });
+                // 克隆原始数据
+                let newNodes = JSON.parse(JSON.stringify(option.series[0].data));
+                let newEdges = JSON.parse(JSON.stringify(option.series[0].edges));
 
-                // 高亮显示路径上的节点和边
-                path.forEach((user, index) => {
-                    let node = option.series[0].data.find(n => n.username === user.toString());
-                    if (node) {
-                        node.itemStyle = { color: "red" }; // 高亮显示节点
-                    }
-
-                    if (index < path.length - 1) {
-                        let edge = option.series[0].edges.find(e =>
-                            (e.source === path[index].toString() && e.target === path[index + 1].toString()) ||
-                            (e.source === path[index + 1].toString() && e.target === path[index].toString())
-                        );
-                        if (edge) {
-                            edge.lineStyle = { color: "red", width: 3 }; // 高亮显示边
-                        }
+                // 1️⃣ **高亮路径上的节点**
+                path.forEach(user => {
+                    let nodeIndex = newNodes.findIndex(n => n.username === user.toString());
+                    if (nodeIndex !== -1) {
+                        newNodes[nodeIndex] = {
+                            ...newNodes[nodeIndex],
+                            symbolSize: 20, // 增大节点
+                            itemStyle: { color: "purple" }, // 高亮节点为红色
+                            emphasis: { itemStyle: { color: "purple" } } // 鼠标悬浮时高亮
+                        };
                     }
                 });
 
-                // 更新图表显示
-                chart.setOption(option);
+                // 2️⃣ **高亮路径上的边**
+                for (let i = 0; i < path.length - 1; i++) {
+                    let edgeIndex = newEdges.findIndex(e =>
+                        (e.source === path[i].toString() && e.target === path[i + 1].toString()) ||
+                        (e.source === path[i + 1].toString() && e.target === path[i].toString())
+                    );
+                    if (edgeIndex !== -1) {
+                        newEdges[edgeIndex] = {
+                            ...newEdges[edgeIndex],
+                            lineStyle: { color: "red", width: 5 } // 更粗的红色边
+                        };
+                    }
+                }
+
+                // 3️⃣ **强制更新图表**
+                chart.setOption({
+                    series: [{
+                        type: "graph",
+                        layout: "force",
+                        roam: true,
+                        draggable: true,
+                        force: {
+                            repulsion: 150,
+                            edgeLength: [50, 200]
+                        },
+                        label: {
+                            show: true,
+                            position: "right",
+                            formatter: "{b}"
+                        },
+                        edgeSymbol: ["circle"],
+                        edgeSymbolSize: [4, 10],
+                        data: newNodes, // 更新节点
+                        edges: newEdges  // 更新边
+                    }]
+                });
             }
 
-            // 刷新按钮功能
             document.getElementById("refresh-btn").addEventListener("click", function() {
-                // 清空输入框
                 document.getElementById("start-user").value = "";
                 document.getElementById("end-user").value = "";
-
-                // 清空图表
                 chart.clear();
             });
         })

@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>社交关系可视化 🔹 消息互动网络图</title>
+    <title>社交关系可视化 🔹 用户传播性分析</title>
     <script src="{{ url_for('static', filename='echarts.min.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>社交关系可视化 🔹 消息互动网络图</h1>
+    <h1>社交关系可视化 🔹 用户传播性分析</h1>
 
     <button id="back-button" onclick="window.location.href='{{ url_for('index') }}'">🔙 BACK</button>
 
     <div id="chart"></div>
         <div id="top10-container">
-        <h2>📊 Top 10 活跃用户</h2>
+        <h2>📊 用户传播性 Top 10</h2>
         <ol id="top10-list"></ol>
     </div>
     <script src="{{ url_for('static', filename='messages.js') }}"></script>

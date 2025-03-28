@@ -10,9 +10,11 @@ from database import fetch_data  # 确保数据库连接和查询函数正确
 
 def analyze_friends():
     """获取好友关系数据并计算节点属性，包含所有用户"""
+    # 查询所有用户信息
     query_users = "SELECT id, username FROM users"
     df_users = fetch_data(query_users)
 
+    # 查询好友关系数据
     query_friends = """
         SELECT f.user_id, u1.username AS user_name_1, 
                f.friend_id, u2.username AS user_name_2
@@ -26,14 +28,14 @@ def analyze_friends():
     G = nx.Graph()
     user_map = {row["id"]: row["username"] for _, row in df_users.iterrows()}  # 记录所有用户
 
-    # 添加边
+    # 添加边（好友关系）
     for _, row in df_friends.iterrows():
         G.add_edge(row["user_id"], row["friend_id"])
 
-    # 计算好友数量
+    # 计算每个用户的好友数量
     degrees = {node: G.degree(node) for node in G.nodes()}
 
-    # 让所有用户都参与计算（包括没有好友的）
+    # 确保所有用户都参与计算（包括没有好友的）
     for user_id in user_map.keys():
         if user_id not in degrees:
             degrees[user_id] = 0  # 无好友
@@ -45,28 +47,30 @@ def analyze_friends():
     bins = np.linspace(vmin, vmax, 6)
     colors = [cm.Paired(i / 5) for i in range(6)]
 
+    # 为每个节点分配颜色
     node_colors = [
         mcolors.to_hex(colors[np.digitize(degrees[user_id], bins) - 1])
         for user_id in user_map.keys()
     ]
 
+    # 为每个节点分配大小
     node_sizes = [
         np.interp(degrees[user_id], (vmin, vmax), (600, 5000))
         for user_id in user_map.keys()
     ]
 
-    # 构造 JSON
+    # 构造 JSON 格式的节点数据
     nodes = [{"id": int(user_id), "username": user_map[user_id], "size": node_sizes[i], "color": node_colors[i],
               "degree": degrees[user_id]}
              for i, user_id in enumerate(user_map.keys())]
 
+    # 构造边数据
     edges = [{"source": int(u), "target": int(v)} for u, v in G.edges()]
 
     return {"nodes": nodes, "edges": edges}
 
-
-def analyze_messages():
-    """获取消息互动数据并计算节点属性，包含所有用户"""
+def analyze_centrality():
+    """计算用户中心性（接收消息的数量）"""
     query_users = "SELECT id, username FROM users"
     df_users = fetch_data(query_users)
 
@@ -89,10 +93,76 @@ def analyze_messages():
     for _, row in df_messages.iterrows():
         G.add_edge(row["sender_id"], row["receiver_id"], weight=row["weight"])
 
-    # 计算活跃度（入度+出度）
+    # 计算中心性（接收消息的数量）
+    node_centrality = {node: sum(d["weight"] for _, _, d in G.in_edges(node, data=True)) for node in G.nodes()}
+
+    # 确保所有用户都包含，即使没有接收消息
+    for user_id in user_map.keys():
+        if user_id not in node_centrality:
+            node_centrality[user_id] = 0
+
+    centrality_values = list(node_centrality.values())
+    vmin, vmax = min(centrality_values), max(centrality_values)
+
+    bins = np.linspace(vmin, vmax, 6)
+    colors = [cm.viridis(i / 5) for i in range(6)]
+
+    node_colors = [
+        mcolors.to_hex(colors[np.digitize(node_centrality[user_id], bins) - 1])
+        for user_id in user_map.keys()
+    ]
+
+    node_sizes = [
+        np.interp(node_centrality[user_id], (vmin, vmax), (1000, 6000))
+        for user_id in user_map.keys()
+    ]
+
+    nodes = [{
+        "id": int(user_id),
+        "username": user_map[user_id],
+        "size": node_sizes[i],
+        "color": node_colors[i],
+        "centrality": node_centrality[user_id]
+    } for i, user_id in enumerate(user_map.keys())]
+
+    edges = [{
+        "source": int(u),
+        "target": int(v),
+        "weight": G[u][v]["weight"]
+    } for u, v in G.edges()]
+
+    return {"nodes": nodes, "edges": edges}
+
+def analyze_messages():
+    """获取消息互动数据并计算节点属性，包含所有用户"""
+    # 查询所有用户信息
+    query_users = "SELECT id, username FROM users"
+    df_users = fetch_data(query_users)
+
+    # 查询消息互动数据
+    query_messages = """
+        SELECT m.sender_id, u1.username AS sender_name,
+               m.receiver_id, u2.username AS receiver_name,
+               COUNT(*) as weight
+        FROM messages m
+        JOIN users u1 ON m.sender_id = u1.id
+        JOIN users u2 ON m.receiver_id = u2.id
+        GROUP BY m.sender_id, m.receiver_id
+    """
+    df_messages = fetch_data(query_messages)
+
+    # 构建有向图
+    G = nx.DiGraph()
+    user_map = {row["id"]: row["username"] for _, row in df_users.iterrows()}
+
+    # 添加边（消息发送和接收）
+    for _, row in df_messages.iterrows():
+        G.add_edge(row["sender_id"], row["receiver_id"], weight=row["weight"])
+
+    # 计算每个用户的活跃度（入度+出度）
     node_activity = {node: sum(d["weight"] for _, _, d in G.edges(node, data=True)) for node in G.nodes()}
 
-    # 确保所有用户都包含，即使没发过消息
+    # 确保所有用户都包含，即使没有发送或接收消息
     for user_id in user_map.keys():
         if user_id not in node_activity:
             node_activity[user_id] = 0  # 没有发送/接收消息
@@ -104,17 +174,19 @@ def analyze_messages():
     bins = np.linspace(vmin, vmax, 6)
     colors = [cm.viridis(i / 5) for i in range(6)]
 
+    # 为每个节点分配颜色
     node_colors = [
         mcolors.to_hex(colors[np.digitize(node_activity[user_id], bins) - 1])
         for user_id in user_map.keys()
     ]
 
+    # 为每个节点分配大小
     node_sizes = [
         np.interp(node_activity[user_id], (vmin, vmax), (1000, 6000))
         for user_id in user_map.keys()
     ]
 
-    # 构造 JSON
+    # 构造 JSON 格式的节点数据
     nodes = [{
         "id": int(user_id),
         "username": user_map[user_id],
@@ -123,6 +195,7 @@ def analyze_messages():
         "activity": node_activity[user_id]
     } for i, user_id in enumerate(user_map.keys())]
 
+    # 构造边数据
     edges = [{
         "source": int(u),
         "target": int(v),
@@ -132,8 +205,10 @@ def analyze_messages():
     return {"nodes": nodes, "edges": edges}
 
 
+
 def analyze_by_timestamp():
     """获取消息互动数据并计算时间序列属性"""
+    # 查询消息的时间戳数据
     query = "SELECT timestamp FROM messages"
     df_time = fetch_data(query)
 
@@ -151,7 +226,7 @@ def analyze_by_timestamp():
     timestamps = msg_count.index.astype(str).tolist()
     smoothed_values = msg_count_smoothed.tolist()
 
-    # 构造 JSON 结果
+    # 构造 JSON 格式的时间序列数据
     time_series = [{"timestamp": timestamps[i], "count": smoothed_values[i]} for i in range(len(timestamps))]
 
     return {"time_series": time_series}
@@ -179,7 +254,7 @@ def analyze_friend_distribution():
     colors = [cm.Blues(i / 5) for i in range(6)]  # 6 级颜色
     color_map = {count: mcolors.to_hex(colors[np.digitize(count, bins) - 1]) for count in friend_counts}
 
-    # 构造 JSON 结果
+    # 构造 JSON 格式的好友数据
     friend_data = [
         {"user_id": int(user), "friend_count": int(count), "color": color_map[count]}
         for user, count in friend_counts.items()
@@ -258,4 +333,13 @@ def analyze_Djs(start_user, end_user):
     if not shortest_path:
         return {"error": "未找到路径"}
 
-    return {"path": shortest_path, "cost": cost}
+    # 计算步骤数和跳过的用户数
+    steps = len(shortest_path) - 1
+    skipped_users = len(shortest_path) - 2  # 减去起始和目标用户
+
+    return {
+        "path": shortest_path,
+        "cost": cost,
+        "steps": steps,
+        "skipped_users": skipped_users
+    }

@@ -169,6 +169,34 @@ nav ul li a:active, #back-button:active {
         transform: translateY(0);
     }
 }
+input {
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 200px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+/* 查询按钮样式 */
+button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+}
+a {
+    color: #007BFF;
+    text-decoration: none;
+    font-size: 14px;
+}
+button:hover {
+    background-color: #45a049;
+}
 
 #top10-list {
     text-align: center;
