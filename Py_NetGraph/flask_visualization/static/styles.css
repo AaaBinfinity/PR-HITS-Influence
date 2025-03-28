@@ -92,7 +92,9 @@ nav ul li a:active, #back-button:active {
 /* 图表容器 */
 #chart {
     width: 90%;
-    height: 700px;
+    height: 80vh; /* 使图表高度占据 70% 的视口高度 */
+    min-height: 400px; /* 设置最小高度，避免太小 */
+    max-height: 80vh; /* 设置最大高度，防止超出屏幕 */
     margin: 20px auto;
     border-radius: 15px;
     background: white;
@@ -100,7 +102,22 @@ nav ul li a:active, #back-button:active {
     opacity: 0;
     transform: scale(0.8);
     animation: fadeInScale 1s ease-out forwards;
-    animation-delay: 0.8s;  /* 延迟加载ECharts动画 */
+    animation-delay: 0.8s;
+}
+
+/* 在小屏幕（如手机）上调整高度 */
+@media (max-width: 768px) {
+    #chart {
+        height: 50vh; /* 让图表在小屏幕上更小一点 */
+    }
+}
+
+
+/* 在大屏幕（如超宽显示器）上调整高度 */
+@media (min-width: 1200px) {
+    #chart {
+        height: 75vh; /* 让图表在大屏幕上更大 */
+    }
 }
 
 
