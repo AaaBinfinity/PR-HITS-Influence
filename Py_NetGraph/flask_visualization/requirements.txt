@@ -1,6 +1,0 @@
-Flask
-pymysql
-pandas
-networkx
-matplotlib
-numpy
