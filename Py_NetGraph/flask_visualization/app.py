@@ -1,7 +1,7 @@
 import logging
 from flask import Flask, jsonify, render_template, request
 from analysis import analyze_friends, analyze_messages, analyze_friend_distribution, analyze_by_timestamp, analyze_Djs, \
-    analyze_centrality
+    analyze_centrality, analyze_messages_pagerank
 
 # Set up logging configuration
 logger = logging.getLogger()
@@ -28,6 +28,21 @@ app = Flask(__name__)
 def index():
     logger.info('Index page accessed')
     return render_template('index.html')
+
+@app.route('/api/messages_pagerank', methods=['GET'])
+def get_messages_pagerank():
+    logger.info('Fetching messages PageRank data')
+    data = analyze_messages_pagerank()
+    logger.info('Messages PageRank data fetched successfully')
+    return jsonify(data)
+
+
+@app.route('/show_messages_pagerank')
+def show_messages_pagerank():
+    logger.info('Social network page accessed')
+    return render_template('show_messages_pagerank.html')
+
+
 
 @app.route('/show_social_network')
 def show_social_network():
