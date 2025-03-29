@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户行为分析</title>
+    <script src="{{ url_for('static', filename='echarts.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>用户行为分析</h1>
+
+    <button id="back-button" onclick="window.location.href='{{ url_for('index') }}'">🔙 BACK</button>
+
+    <div id="user-chart" ></div>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>用户ID</th>
+                <th>用户名</th>
+                <th>消息数</th>
+                <th>最活跃时间段</th>
+            </tr>
+        </thead>
+        <tbody id="user-table">
+            <!-- 用户行为数据会动态加载 -->
+        </tbody>
+    </table>
+
+    <script src="{{ url_for('static', filename='user_behavior.js') }}"></script>
+</body>
+</html>

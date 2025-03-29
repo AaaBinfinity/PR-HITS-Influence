@@ -27,6 +27,15 @@ document.addEventListener("DOMContentLoaded", function () {
                     data: timestamps,
                     axisLabel: { rotate: 45 }
                 },
+                                toolbox: {
+                    show: true,
+                    feature: {
+                        saveAsImage: { title: "保存图片" },
+                        dataZoom: { title: "缩放" },
+                        restore: { title: "还原" }
+                    },
+                    right: "5%"
+                },
                 yAxis: {
                     type: "value",
                     name: "消息数"

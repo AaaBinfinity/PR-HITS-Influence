@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>社交关系可视化 🔹 用户传播性分析</title>
+    <script src="{{ url_for('static', filename='echarts.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>用户 HITS 影响力分析</h1>
+    <div id="top10-container">
+        <h2>HITS Top 10 用户</h2>
+        <label for="sort-method">排序方式:</label>
+        <select id="sort-method">
+            <option value="authority">Authority</option>
+            <option value="hub">Hub</option>
+        </select>
+        <label for="size-method">节点大小:</label>
+        <select id="size-method">
+            <option value="authority">Authority</option>
+            <option value="hub">Hub</option>
+        </select>
+        <ul id="top10-list"></ul>
+    </div>
+    <div id="chart" style="width: 100%; height: 600px;"></div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let chart = echarts.init(document.getElementById("chart"));
+            let sortMethod = document.getElementById("sort-method");
+            let sizeMethod = document.getElementById("size-method");
+            let scaleFactor = 150;
+
+            function updateTop10(data, method) {
+                let top10Users = [...data.nodes]
+                    .sort((a, b) => b[method] - a[method])
+                    .slice(0, 10);
+
+                let top10List = document.getElementById("top10-list");
+                top10List.innerHTML = top10Users
+                    .map(user => `<li>${user.username} - ${method.charAt(0).toUpperCase() + method.slice(1)}: ${user[method].toFixed(3)}</li>`)
+                    .join("");
+            }
+
+            function updateChart(data) {
+                let selectedSizeMethod = sizeMethod.value;
+                let option = {
+                    title: {
+                        text: "用户 HITS 影响力分析",
+                        left: "center",
+                        textStyle: { fontSize: 20 }
+                    },
+                    tooltip: {
+                        trigger: "item",
+                        formatter: function (params) {
+                            if (params.dataType === "node") {
+                                return `用户: <strong>${params.data.username}</strong><br>Authority: ${params.data.authority.toFixed(3)}<br>Hub: ${params.data.hub.toFixed(3)}`;
+                            }
+                            return `发送: <strong>${params.data.source}</strong> → 接收: <strong>${params.data.target}</strong><br>消息数: ${params.data.weight}`;
+                        }
+                    },
+                    legend: {
+                        orient: "vertical",
+                        left: "left",
+                        data: ["高 Authority", "高 Hub", "其他"]
+                    },
+                    series: [{
+                        type: "graph",
+                        layout: "force",
+                        roam: true,
+                        draggable: true,
+                        force: {
+                            repulsion: 180,
+                            edgeLength: [60, 220]
+                        },
+                        toolbox: {
+                            show: true,
+                            feature: {
+                                saveAsImage: { title: "保存图片" },
+                                dataZoom: { title: "缩放" },
+                                restore: { title: "还原" }
+                            },
+                            right: "5%"
+                        },
+                        label: {
+                            show: true,
+                            position: "right",
+                            formatter: "{b}"
+                        },
+                        edgeSymbol: ["none", "arrow"],
+                        edgeSymbolSize: [0, 8],
+                        data: data.nodes.map(n => {
+    let category;
+    if (n.authority > n.hub) {
+        category = { name: "高 Authority", color: "#e74c3c" };
+    } else if (n.hub > n.authority) {
+        category = { name: "高 Hub", color: "#f39c12" };
+    } else {
+        category = { name: "其他", color: "#3498db" };
+    }
+    return {
+        name: n.username,
+        id: n.id,
+        symbolSize: Math.max(n[selectedSizeMethod] * scaleFactor, 10),  // 最小值 10
+        itemStyle: { color: category.color },
+        category: category.name,
+        username: n.username,
+        authority: n.authority,
+        hub: n.hub
+    };
+}),
+
+                        edges: data.edges.map(e => ({
+                            source: e.source.toString(),
+                            target: e.target.toString(),
+                            weight: e.weight,
+                            lineStyle: {
+                                color: e.source === e.target ? '#BDC3C7' : (e.source > e.target ? '#adcffa' : '#ffd2a8'),
+                                width: 2.0,
+                                curveness: 0.05
+                            }
+                        })),
+                        categories: [
+                            { name: "高 Authority", color: "#e74c3c" },
+                            { name: "高 Hub", color: "#f39c12" },
+                            { name: "其他", color: "#3498db" }
+                        ]
+                    }]
+                };
+                chart.setOption(option);
+            }
+
+            fetch("/api/messages_hits")
+                .then(response => response.json())
+                .then(data => {
+                    updateTop10(data, sortMethod.value);
+                    updateChart(data);
+                    sortMethod.addEventListener("change", () => updateTop10(data, sortMethod.value));
+                    sizeMethod.addEventListener("change", () => updateChart(data));
+                })
+                .catch(error => console.error("数据加载失败:", error));
+        });
+    </script>
+</body>
+</html>

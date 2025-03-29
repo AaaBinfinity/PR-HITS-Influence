@@ -44,6 +44,61 @@ nav ul {
     padding: 0;
 }
 
+/* 表格样式 */
+table {
+    width: 80%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* 表头样式 */
+thead {
+    background-color: #007bff;
+    color: white;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+th {
+    font-weight: bold;
+}
+
+/* 表格行悬浮效果 */
+tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* 图表容器 */
+#user-chart {
+    width: 80%;
+    height: 400px;
+    margin: 20px auto;
+    background: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 10px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    table {
+        width: 100%;
+    }
+
+    #user-chart {
+        width: 100%;
+        height: 300px;
+    }
+}
+
 /* 导航项 */
 nav ul li {
     margin: 15px 0;

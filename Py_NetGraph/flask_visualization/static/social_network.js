@@ -26,6 +26,15 @@ document.addEventListener("DOMContentLoaded", function () {
                     left: "center",
                     textStyle: { fontSize: 20 }
                 },
+                toolbox: {
+                    show: true,
+                    feature: {
+                        saveAsImage: { title: "保存图片" },
+                        dataZoom: { title: "缩放" },
+                        restore: { title: "还原" }
+                    },
+                    left: "5%"
+                },
                 tooltip: {
                     trigger: "item",
                     formatter: function (params) {

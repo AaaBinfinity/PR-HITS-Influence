@@ -37,6 +37,15 @@ document.addEventListener("DOMContentLoaded", function () {
                         return `发送: <strong>${params.data.source}</strong> → 接收: <strong>${params.data.target}</strong><br>消息数: ${params.data.weight}`;
                     }
                 },
+                toolbox: {
+                    show: true,
+                    feature: {
+                        saveAsImage: { title: "保存图片" },
+                        dataZoom: { title: "缩放" },
+                        restore: { title: "还原" }
+                    },
+                    right: "5%"
+                },
                 legend: {
                     orient: "vertical",
                     left: "left",

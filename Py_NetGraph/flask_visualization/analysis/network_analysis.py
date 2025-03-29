@@ -4,6 +4,8 @@ import networkx as nx
 import numpy as np
 import matplotlib.cm as cm
 import matplotlib.colors as mcolors
+from flask import jsonify
+
 from database import fetch_data  # 确保数据库连接和查询函数正确
 
 
@@ -313,5 +315,64 @@ def analyze_messages_pagerank():
         "target": int(v),
         "weight": G[u][v]["weight"]
     } for u, v in G.edges()]
+
+    return {"nodes": nodes, "edges": edges}
+
+import networkx as nx
+from datetime import datetime, timedelta
+
+def analyze_messages_hits():
+    """使用 HITS 算法计算用户的 hub 和 authority 值（仅采集最近一个月的数据）"""
+
+    one_month_ago = datetime.now() - timedelta(days=30)
+    one_month_ago_str = one_month_ago.strftime('%Y-%m-%d %H:%M:%S')
+
+    query_users = "SELECT id, username FROM users"
+    df_users = fetch_data(query_users)
+
+    query_messages = f"""
+        SELECT m.sender_id, u1.username AS sender_name,
+               m.receiver_id, u2.username AS receiver_name,
+               COUNT(*) as weight
+        FROM messages m
+        JOIN users u1 ON m.sender_id = u1.id
+        JOIN users u2 ON m.receiver_id = u2.id
+        WHERE m.timestamp >= '{one_month_ago_str}'
+        GROUP BY m.sender_id, m.receiver_id
+    """
+    df_messages = fetch_data(query_messages)
+
+    G = nx.DiGraph()
+    user_map = {row["id"]: row["username"] for _, row in df_users.iterrows()}
+
+    for _, row in df_messages.iterrows():
+        G.add_edge(row["sender_id"], row["receiver_id"], weight=row["weight"])
+
+    G.add_nodes_from(df_users['id'])
+
+    hits_scores = nx.hits(G, max_iter=100, tol=1e-08)
+    hub_scores, authority_scores = hits_scores
+
+    return hub_scores, authority_scores, user_map, df_messages
+
+def get_messages_hits_data():
+    """返回包含 hub 和 authority 的数据"""
+    hub_scores, authority_scores, user_map, df_messages = analyze_messages_hits()
+
+    nodes = [
+        {
+            "id": int(user_id),
+            "username": user_map[user_id],
+            "authority": round(authority_scores.get(user_id, 0), 3),
+            "hub": round(hub_scores.get(user_id, 0), 3),
+            "size": int((authority_scores.get(user_id, 0) + hub_scores.get(user_id, 0)) * 1000)
+        }
+        for user_id in user_map.keys()
+    ]
+
+    edges = [
+        {"source": int(row["sender_id"]), "target": int(row["receiver_id"]), "weight": int(row["weight"])}
+        for _, row in df_messages.iterrows()
+    ]
 
     return {"nodes": nodes, "edges": edges}

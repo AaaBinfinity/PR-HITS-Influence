@@ -1,8 +1,9 @@
 import logging
-from flask import Flask, jsonify, render_template, request
-from analysis import analyze_friends, analyze_messages, analyze_friend_distribution, analyze_by_timestamp, analyze_Djs, \
-    analyze_centrality, analyze_messages_pagerank
+from flask import Flask, render_template, request, jsonify
 
+from analysis.network_analysis import *
+from analysis.shortest_path import *
+from analysis.time_series_analysis import *
 # Set up logging configuration
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -28,6 +29,21 @@ app = Flask(__name__)
 def index():
     logger.info('Index page accessed')
     return render_template('index.html')
+
+
+@app.route('/api/messages_hits', methods=['GET'])
+def get_messages_hits():
+    logger.info('Fetching messages HITS data')
+
+    data = get_messages_hits_data()
+    logger.info('Messages HITS data fetched successfully')
+    return jsonify(data)
+
+@app.route('/show_messages_hits')
+def show_messages_hits():
+    logger.info('Social network HITS page accessed')
+    return render_template('show_messages_hits.html')
+
 
 @app.route('/api/by_timestamp', methods=['GET'])
 def get_analyze_by_timestamp():
@@ -69,6 +85,17 @@ def show_shortest_way():
     logger.info('Shortest way page accessed')
     return render_template("show_shortest_way.html")
 
+@app.route('/api/user_behavior', methods=['GET'])
+def get_user_behavior():
+    """处理 /api/user_behavior 请求并返回用户行为数据"""
+    data = analyze_user_behavior()
+    return jsonify(data)
+
+@app.route('/show_user_behavior')
+def show_user_behavior():
+    """渲染用户行为分析页面"""
+    logger.info('User behavior analysis page accessed')
+    return render_template('user_behavior.html')
 @app.route('/api/shortest_path', methods=['GET'])
 def shortest_path():
     start_user = request.args.get('start_user')

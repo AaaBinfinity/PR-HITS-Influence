@@ -8,6 +8,15 @@ document.addEventListener("DOMContentLoaded", function () {
             let median_friends = data.stats.median_friends;
 
             let option = {
+                toolbox: {
+                    show: true,
+                    feature: {
+                        saveAsImage: { title: "保存图片" },
+                        dataZoom: { title: "缩放" },
+                        restore: { title: "还原" }
+                    },
+                    right: "5%"
+                },
                 title: {
                     text: "好友数量分布",
                     left: "center",

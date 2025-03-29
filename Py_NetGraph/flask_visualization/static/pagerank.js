@@ -44,6 +44,15 @@ document.addEventListener("DOMContentLoaded", function () {
                         repulsion: 180,
                         edgeLength: [60, 220]
                     },
+                toolbox: {
+                    show: true,
+                    feature: {
+                        saveAsImage: { title: "保存图片" },
+                        dataZoom: { title: "缩放" },
+                        restore: { title: "还原" }
+                    },
+                    right: "5%"
+                },
                     label: {
                         show: true,
                         position: "right",
@@ -53,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     edgeSymbolSize: [0, 8],
                     data: data.nodes.map(n => {
                         let category;
-                        if (n.pagerank > 0.02) {
+                        if (n.pagerank > 0.05) {
                             category = { name: "高影响力", color: "#e74c3c" };
                         } else if (n.pagerank > 0.005) {
                             category = { name: "中影响力", color: "#f39c12" };
@@ -70,6 +79,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             pagerank: n.pagerank
                         };
                     }),
+
                     edges: data.edges.map(e => ({
                         source: e.source.toString(),
                         target: e.target.toString(),
