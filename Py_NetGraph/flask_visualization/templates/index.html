@@ -5,24 +5,82 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>社交关系可视化</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+    nav ul {
+        list-style: none;
+        padding: 0;
+        text-align: center;
+    }
+
+    nav ul li {
+        display: inline-block;
+        margin: 10px 15px;
+        font-size: 18px;
+        font-weight: bold;
+        position: relative;
+        transition: transform 0.3s ease-in-out;
+        animation: breathing 2.5s infinite alternate ease-in-out;
+    }
+
+    nav ul li a {
+        text-decoration: none;
+        color: #333;
+        padding: 10px 15px;
+        border-radius: 10px;
+        transition: color 0.3s, box-shadow 0.3s;
+    }
+
+    /* 鼠标悬停时左右浮动 */
+    nav ul li:hover {
+        transform: translateX(5px);
+    }
+
+    /* 鼠标悬停时高亮 */
+    nav ul li a:hover {
+        color: #1369d6;
+        box-shadow: 0 0 10px rgba(64, 204, 255, 0.6);
+    }
+
+    /* 呼吸闪烁动画 */
+    @keyframes breathing {
+        0% {
+            opacity: 0.8;
+            transform: scale(1);
+        }
+        50% {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+        100% {
+            opacity: 0.8;
+            transform: scale(1);
+        }
+    }
+</style>
 </head>
 <body>
-    <h1>社交关系可视化</h1>
+    <h1>binfinity-social-media-app 社交网络分析</h1>
+    </br>
     <nav>
-        <ul>
-            <li><a href="{{ url_for('show_social_network') }}">社交关系网络</a></li>
-            <li><a href="{{ url_for('show_messages') }}">用户传播性分析</a></li>
-            <li><a href="{{ url_for('show_centrality') }}">用户中心性分析</a></li>
-            <li><a href="{{ url_for('show_friend_distribution') }}">好友量分布</a></li>
-            <li><a href="{{ url_for('show_shortest_way') }}">最短社交路径</a></li>
-            <li><a href="{{ url_for('show_messages_pagerank') }}">PageRank 影响力分析</a></li>
-        </ul>
-        </br>
-        </br>
+<ul>
+    <li><a href="{{ url_for('show_social_network') }}">🌐🔗 社交关系网络</a></li>
+    <li><a href="{{ url_for('show_messages_pagerank') }}">📊👑 PageRank 影响力分析</a></li>
 
+</ul>
+<ul>
+    <li><a href="{{ url_for('show_friend_distribution') }}">👥📈 好友量分布</a></li>
+    <li><a href="{{ url_for('show_shortest_way') }}">🛤️✨ 最短社交路径</a></li>
+    <li><a href="{{ url_for('show_by_timestamp') }}">🛤✨ 时间序列分析</a></li>
+</ul>
+<ul>
+    <li><a href="{{ url_for('show_messages') }}">📢🔥 用户传播性分析</a></li>
+    <li><a href="{{ url_for('show_centrality') }}">🎯⭐ 用户中心性分析</a></li>
+</ul>
 
-    </nav>
+  </br>
+
 <button id="back-button" onclick="window.location.href='http://120.26.87.54/binfinity-social-media-app/index.html'">🔙 BACK</button>
+    </nav>
 
 </body>
 </html>

@@ -29,6 +29,15 @@ def index():
     logger.info('Index page accessed')
     return render_template('index.html')
 
+@app.route('/api/by_timestamp', methods=['GET'])
+def get_analyze_by_timestamp():
+    """处理 /api/by 请求并返回时间序列数据"""
+    data = analyze_by_timestamp()
+    return jsonify(data)
+@app.route('/show_by_timestamp')
+def show_by_timestamp():
+    logger.info('Social network page accessed')
+    return render_template('timestamp_analysis.html')
 @app.route('/api/messages_pagerank', methods=['GET'])
 def get_messages_pagerank():
     logger.info('Fetching messages PageRank data')
