@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     data: timestamps,
                     axisLabel: { rotate: 45 }
                 },
-                                toolbox: {
+                toolbox: {
                     show: true,
                     feature: {
                         saveAsImage: { title: "保存图片" },
@@ -46,8 +46,18 @@ document.addEventListener("DOMContentLoaded", function () {
                         show: true,
                         start: 50, // 默认显示后半部分
                         end: 100,
-                        height: 15,
-                        bottom: 10
+                        height: 10, // 改变滚动条的高度
+                        bottom: 10,
+                        handleStyle: {
+                            color: '#007bff', // 滑块颜色
+                            borderColor: '#0056b3', // 滑块边框颜色
+                            borderWidth: 2, // 滑块边框宽度
+                            shadowBlur: 4, // 滑块阴影效果
+                            shadowColor: 'rgba(0, 123, 255, 0.5)', // 滑块阴影颜色
+                        },
+                        fillerColor: 'rgba(0, 123, 255, 0.2)', // 填充颜色
+                        borderColor: '#0056b3', // 滑动条边框颜色
+                        backgroundColor: '#e0e0e0' // 背景颜色
                     }
                 ],
                 series: [

@@ -8,7 +8,6 @@ import matplotlib.colors as mcolors
 from community import community_louvain
 from database import fetch_data  # 确保数据库连接和查询函数正确
 
-
 def analyze_friends():
     """获取好友关系数据并计算节点属性，包含所有用户"""
     # 查询所有用户信息
@@ -45,9 +44,7 @@ def analyze_friends():
     vmin, vmax = min(degree_values), max(degree_values)
 
     # 🎨 颜色划分
-
     bins = np.linspace(vmin, vmax, 6)
-
     colors = [cm.Paired(i / 5) for i in range(6)]
 
     # 为每个节点分配颜色
@@ -72,11 +69,14 @@ def analyze_friends():
 
     return {"nodes": nodes, "edges": edges}
 
+
 def analyze_centrality():
     """计算用户中心性（接收消息的数量）"""
+    # 查询所有用户信息
     query_users = "SELECT id, username FROM users"
     df_users = fetch_data(query_users)
 
+    # 查询消息数据，计算每个用户接收到的消息数量
     query_messages = """
         SELECT m.sender_id, u1.username AS sender_name,
                m.receiver_id, u2.username AS receiver_name,
@@ -87,18 +87,17 @@ def analyze_centrality():
         WHERE m.timestamp >= DATE_SUB(NOW(), INTERVAL 1 MONTH)  -- 仅查询最近 1 个月的数据
         GROUP BY m.sender_id, m.receiver_id
     """
-
     df_messages = fetch_data(query_messages)
 
     # 构建有向图
     G = nx.DiGraph()
     user_map = {row["id"]: row["username"] for _, row in df_users.iterrows()}
 
-    # 添加边
+    # 添加边（消息数据）
     for _, row in df_messages.iterrows():
         G.add_edge(row["sender_id"], row["receiver_id"], weight=row["weight"])
 
-    # 计算中心性（接收消息的数量）
+    # 计算每个用户的中心性（接收消息的数量）
     node_centrality = {node: sum(d["weight"] for _, _, d in G.in_edges(node, data=True)) for node in G.nodes()}
 
     # 确保所有用户都包含，即使没有接收消息
@@ -109,19 +108,23 @@ def analyze_centrality():
     centrality_values = list(node_centrality.values())
     vmin, vmax = min(centrality_values), max(centrality_values)
 
+    # 🎨 颜色划分
     bins = np.linspace(vmin, vmax, 6)
     colors = [cm.viridis(i / 5) for i in range(6)]
 
+    # 为每个节点分配颜色
     node_colors = [
         mcolors.to_hex(colors[np.digitize(node_centrality[user_id], bins) - 1])
         for user_id in user_map.keys()
     ]
 
+    # 为每个节点分配大小
     node_sizes = [
         np.interp(node_centrality[user_id], (vmin, vmax), (1000, 6000))
         for user_id in user_map.keys()
     ]
 
+    # 构造 JSON 格式的节点数据
     nodes = [{
         "id": int(user_id),
         "username": user_map[user_id],
@@ -130,6 +133,7 @@ def analyze_centrality():
         "centrality": node_centrality[user_id]
     } for i, user_id in enumerate(user_map.keys())]
 
+    # 构造边数据
     edges = [{
         "source": int(u),
         "target": int(v),
@@ -137,6 +141,7 @@ def analyze_centrality():
     } for u, v in G.edges()]
 
     return {"nodes": nodes, "edges": edges}
+
 
 def analyze_messages():
     """获取消息互动数据并计算节点属性，包含所有用户"""
@@ -477,6 +482,3 @@ def analyze_community():
     edges = [{"source": int(u), "target": int(v)} for u, v in G.edges()]
 
     return {"nodes": nodes, "edges": edges, "community_map": community_map, "colors": colors}
-
-
-

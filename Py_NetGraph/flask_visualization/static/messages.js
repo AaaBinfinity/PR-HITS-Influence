@@ -49,7 +49,24 @@ document.addEventListener("DOMContentLoaded", function () {
                 legend: {
                     orient: "vertical",
                     left: "left",
-                    data: categories.map(c => c.name)
+                    data: categories.map(c => c.name),
+                    textStyle: {
+                        color: "#333"  // 图例文字颜色
+                    },
+                    itemWidth: 12,  // 图例图标宽度
+                    itemHeight: 12, // 图例图标高度
+                    formatter: function (name) {
+                        // 将图例颜色自定义为每个活跃度类别的颜色
+                        const category = categories.find(c => c.name === name);
+                        return `{${name}|${name}}`;
+                    },
+                    textStyle: {
+                        rich: {
+                            "高活跃": { color: "#e74c3c" },
+                            "中活跃": { color: "#f39c12" },
+                            "低活跃": { color: "#3498db" }
+                        }
+                    }
                 },
                 series: [{
                     type: "graph",
@@ -96,7 +113,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             curveness: 0.05
                         }
                     })),
-                    categories: categories
+                    categories: categories.map(c => ({ name: c.name, itemStyle: { color: c.color } }))
                 }]
             };
             chart.setOption(option);
