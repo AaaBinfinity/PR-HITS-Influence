@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     roam: true,
                     draggable: true,
                     force: {
-                        repulsion: 150,
+                        repulsion: 230,
                         edgeLength: [50, 200]
                     },
                     label: {

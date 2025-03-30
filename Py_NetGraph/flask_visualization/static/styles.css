@@ -168,6 +168,35 @@ nav ul li a:active, #back-button:active {
     animation: fadeInScale 1s ease-out forwards;
     animation-delay: 0.8s;
 }
+label {
+    font-size: 16px;
+    font-weight: bold;
+    margin-right: 8px;
+}
+
+select {
+    font-size: 14px;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    cursor: pointer;
+}
+.sort-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+select:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+#sort-method, #size-method {
+    margin-right: 15px;
+}
 
 /* 在小屏幕（如手机）上调整高度 */
 @media (max-width: 768px) {
