@@ -173,6 +173,65 @@ label {
     font-weight: bold;
     margin-right: 8px;
 }
+/* 美化社区列表 */
+#community-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    max-height: 500px;
+    overflow-y: auto;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* 每个社区项的样式 */
+#community-list li {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin: 5px 0;
+    background-color: #fff;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+/* hover 效果 */
+#community-list li:hover {
+    background-color: #f0f8ff;
+}
+
+/* 复选框样式 */
+#community-list input[type="checkbox"] {
+    margin-right: 10px;
+    transform: scale(1.2);  /* 放大复选框 */
+    transition: transform 0.2s ease;
+}
+
+/* 复选框选中时的样式 */
+#community-list input[type="checkbox"]:checked {
+    background-color: #4CAF50;  /* 选中时背景色 */
+}
+
+/* 复选框悬停效果 */
+#community-list input[type="checkbox"]:hover {
+    transform: scale(1.3);  /* 悬停时放大复选框 */
+}
+
+/* 社区信息文字样式 */
+#community-list li span {
+    font-size: 14px;
+    color: #333;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+/* 美化社区名称 */
+#community-list li span.community-name {
+    font-size: 16px;
+    color: #2c3e50;
+    font-weight: bold;
+}
 
 select {
     font-size: 14px;

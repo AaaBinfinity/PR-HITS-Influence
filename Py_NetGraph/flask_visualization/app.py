@@ -68,7 +68,16 @@ def show_messages_pagerank():
     return render_template('show_messages_pagerank.html')
 
 
+@app.route('/api/user_communities', methods=['GET'])
+def get_user_communities():
+    """获取用户社区划分数据"""
+    data = analyze_community()
+    return jsonify(data)
 
+@app.route('/show_user_communities')
+def show_user_communities():
+    """渲染用户社区页面"""
+    return render_template('show_user_communities.html')
 @app.route('/show_social_network')
 def show_social_network():
     logger.info('Social network page accessed')

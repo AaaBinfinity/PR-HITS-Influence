@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户社区划分可视化</title>
+    <script src="{{ url_for('static', filename='echarts.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>用户社区划分可视化</h1>
+
+    <button id="back-button" onclick="window.location.href='{{ url_for('index') }}'">🔙 BACK</button>
+
+    <div id="community-controls"></div>
+<ul id="community-list"></ul>
+
+    <div id="chart"></div>
+    <div id="community-container">
+
+        <ol id="community-list"></ol>
+    </div>
+
+    <script src="{{ url_for('static', filename='community.js') }}"></script>
+</body>
+</html>
