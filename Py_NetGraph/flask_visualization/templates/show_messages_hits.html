@@ -12,24 +12,29 @@
     <h1>用户 HITS 影响力分析</h1>
 
     <button id="back-button" onclick="window.location.href='{{ url_for('index') }}'">🔙 BACK</button>
-    <div id="chart" style="height: 1150px"> </div>
 
- <label for="sort-method">排序方式:</label>
-        <select id="sort-method">
-            <option value="authority">Authority</option>
-            <option value="hub">Hub</option>
-        </select>
-        <label for="size-method">节点大小:</label>
-        <select id="size-method">
-            <option value="authority">Authority</option>
-            <option value="hub">Hub</option>
-        </select>
+<br>
+    <label for="community-selector">选择社区:</label>
+    <select id="community-selector">
+        <!-- 根据数据动态生成社区选项 -->
+    </select>
+
+    <label for="sort-method">排序方式:</label>
+    <select id="sort-method">
+        <option value="authority">Authority</option>
+        <option value="hub">Hub</option>
+    </select>
+
+    <label for="size-method">节点大小:</label>
+    <select id="size-method">
+        <option value="authority">Authority</option>
+        <option value="hub">Hub</option>
+    </select>
+    <div id="chart" style="height: 950px"> </div>
     <div id="top10-container">
         <h2>HITS Top 10 用户</h2>
-
         <ul id="top10-list"></ul>
     </div>
-
 
 </body>
 </html>

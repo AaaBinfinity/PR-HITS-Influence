@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let chart = echarts.init(document.getElementById("chart"));  // 初始化图表
     const sortMethod = document.getElementById("sort-method");  // 获取排序方式选择元素
     const sizeMethod = document.getElementById("size-method");  // 获取大小方式选择元素
+    const communitySelector = document.getElementById("community-selector");  // 获取社区选择元素
     const scaleFactor = 150;  // 缩放因子，用于调整节点的大小
 
     let cachedData = null;  // 缓存数据，用于避免重复请求
@@ -18,8 +19,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // 更新 Top 10 排行榜
-    function updateTop10(data, method) {
-        const top10Users = [...data.nodes]
+    function updateTop10(data, method, selectedCommunityId) {
+        // 如果选择了 'all'，则不过滤社区
+        const nodesToUse = selectedCommunityId === "all" ? data.nodes : data.nodes.filter(node => node.community_id == selectedCommunityId);
+
+        const top10Users = [...nodesToUse]
             .sort((a, b) => b[method] - a[method])  // 按照选择的排序方法排序
             .slice(0, 10);  // 取前 10 名用户
 
@@ -30,8 +34,14 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // 更新图表
-    function updateChart(data) {
+    function updateChart(data, selectedCommunityId) {
         const selectedSizeMethod = sizeMethod.value;  // 获取选择的节点大小方法
+
+        // 如果选择了 'all'，则不过滤社区
+        const filteredNodes = selectedCommunityId === "all" ? data.nodes : data.nodes.filter(node => node.community_id == selectedCommunityId);
+        const filteredEdges = data.edges.filter(edge =>
+            filteredNodes.some(node => node.id === edge.source || node.id === edge.target)
+        );
 
         const option = {
             title: {
@@ -80,7 +90,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 },
                 edgeSymbol: ["none", "arrow"],  // 边的符号，箭头表示边的方向
                 edgeSymbolSize: [0, 8],  // 箭头的大小
-                data: data.nodes.map(n => {
+                data: filteredNodes.map(n => {
                     const category = categorizeNode(n);  // 获取节点的分类
                     return {
                         name: n.username,  // 节点名称
@@ -93,7 +103,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         hub: n.hub  // Hub 值
                     };
                 }),
-                edges: data.edges.map(e => ({
+                edges: filteredEdges.map(e => ({
                     source: e.source.toString(),  // 边的起始节点
                     target: e.target.toString(),  // 边的目标节点
                     weight: e.weight,  // 边的权重
@@ -120,21 +130,42 @@ document.addEventListener("DOMContentLoaded", function () {
             .then(response => response.json())
             .then(data => {
                 cachedData = data;  // 存储获取的数据
-                updateTop10(data, sortMethod.value);  // 更新排行榜
-                updateChart(data);  // 更新图表
+
+                // 动态生成社区选择下拉框，添加 "all" 选项
+                const communityIds = [...new Set(data.nodes.map(node => node.community_id))];
+                const allOption = document.createElement("option");
+                allOption.value = "all";
+                allOption.textContent = "所有社区";
+                communitySelector.appendChild(allOption);
+
+                communityIds.forEach(id => {
+                    const option = document.createElement("option");
+                    option.value = id;
+                    option.textContent = `社区 ${id + 2}`;
+                    communitySelector.appendChild(option);
+                });
+
+                communitySelector.addEventListener("change", () => {
+                    const selectedCommunityId = communitySelector.value;
+                    updateChart(cachedData, selectedCommunityId);  // 更新图表
+                    updateTop10(cachedData, sortMethod.value, selectedCommunityId);  // 更新Top10
+                });
+
+                updateTop10(data, sortMethod.value, "all");  // 更新排行榜
+                updateChart(data, "all");  // 更新图表
 
                 // 添加排序和大小方法的事件监听器
-                sortMethod.addEventListener("change", () => updateTop10(cachedData, sortMethod.value));  // 当排序方式变化时，更新排行榜
-                sizeMethod.addEventListener("change", () => updateChart(cachedData));  // 当大小方式变化时，更新图表
+                sortMethod.addEventListener("change", () => updateTop10(cachedData, sortMethod.value, communitySelector.value));  // 当排序方式变化时，更新排行榜
+                sizeMethod.addEventListener("change", () => updateChart(cachedData, communitySelector.value));  // 当大小方式变化时，更新图表
             })
             .catch(error => console.error("数据加载失败:", error));  // 捕获并处理加载数据的错误
     } else {
-        updateTop10(cachedData, sortMethod.value);  // 如果缓存数据存在，直接更新排行榜
-        updateChart(cachedData);  // 直接更新图表
+        updateTop10(cachedData, sortMethod.value, "all");  // 如果缓存数据存在，直接更新排行榜
+        updateChart(cachedData, "all");  // 直接更新图表
     }
 
     // 使图表在窗口大小变化时自适应
-    window.addEventListener('resize', function() {
+    window.addEventListener('resize', function () {
         chart.resize();  // 调整图表大小
     });
 });

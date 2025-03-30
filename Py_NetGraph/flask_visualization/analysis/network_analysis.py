@@ -375,6 +375,7 @@ def analyze_messages_hits(days=30):
     # **独立计算 HITS**
     hub_scores = {}
     authority_scores = {}
+    community_ids = {}
 
     for i, community in enumerate(communities):
         subG = G.subgraph(community).copy()
@@ -392,13 +393,16 @@ def analyze_messages_hits(days=30):
         hub_scores.update(sub_hub_scores)
         authority_scores.update(sub_authority_scores)
 
-    return hub_scores, authority_scores, user_map, df_messages
+        # 记录社区ID
+        for node in community:
+            community_ids[node] = i  # Community ID is the index of the community
 
+    return hub_scores, authority_scores, user_map, community_ids, df_messages
 
 
 def get_messages_hits_data(days=30):
-    """返回包含 hub 和 authority 的数据"""
-    hub_scores, authority_scores, user_map, df_messages = analyze_messages_hits(days)
+    """返回包含 hub、authority 和 community_id 的数据"""
+    hub_scores, authority_scores, user_map, community_ids, df_messages = analyze_messages_hits(days)
 
     nodes = [
         {
@@ -406,7 +410,8 @@ def get_messages_hits_data(days=30):
             "username": user_map[user_id],
             "authority": round(authority_scores.get(user_id, 0), 6),
             "hub": round(hub_scores.get(user_id, 0), 6),
-            "size": int((authority_scores.get(user_id, 0) + hub_scores.get(user_id, 0)) * 1000)
+            "size": int((authority_scores.get(user_id, 0) + hub_scores.get(user_id, 0)) * 1000),
+            "community_id": community_ids.get(user_id, -1)  # Default to -1 if no community ID
         }
         for user_id in user_map.keys()
     ]
@@ -417,6 +422,7 @@ def get_messages_hits_data(days=30):
     ]
 
     return {"nodes": nodes, "edges": edges}
+
 
 def analyze_community():
     """获取用户社区划分数据"""
