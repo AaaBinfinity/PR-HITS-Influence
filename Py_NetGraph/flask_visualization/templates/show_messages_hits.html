@@ -7,8 +7,10 @@
     <script src="{{ url_for('static', filename='echarts.min.js') }}"></script>
     <script src="{{ url_for('static', filename='hits.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bgc.css') }}">
 </head>
 <body>
+    <iframe src="{{ url_for('static', filename='星空.html') }}"></iframe>
     <h1>用户 HITS 影响力分析</h1>
 
     <button id="back-button" onclick="window.location.href='{{ url_for('index') }}'">🔙 BACK</button>

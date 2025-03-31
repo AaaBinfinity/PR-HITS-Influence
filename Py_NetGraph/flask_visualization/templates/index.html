@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>社交关系可视化</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bgc.css') }}">
     <style>
     nav ul {
         list-style: none;
@@ -59,26 +60,28 @@
 </style>
 </head>
 <body>
+    <iframe src="{{ url_for('static', filename='星空.html') }}"></iframe>
+
     <h1>binfinity-social-media-app 社交网络分析</h1>
     </br>
     <nav>
 <ul>
-    <li><a href="{{ url_for('show_messages_pagerank') }}">📊👑 PageRank 影响力分析 📊👑</a></li>
-    <li><a href="{{ url_for('show_messages_hits') }}">📊🔧 HITS 用户分类 📊🔧</a></li>
-    <li><a href="{{ url_for('show_user_communities') }}">🌐🧩 Louvain 用户社区划分 🌐🧩</a></li>
+    <li><a style="color: aliceblue;" href="{{ url_for('show_messages_pagerank') }}">📊👑 PageRank 影响力分析 📊👑</a></li>
+    <li><a style="color: aliceblue;" href="{{ url_for('show_messages_hits') }}">📊🔧 HITS 用户分类 📊🔧</a></li>
+    <li><a style="color: aliceblue;" href="{{ url_for('show_user_communities') }}">🌐🧩 Louvain 用户社区划分 🌐🧩</a></li>
 </ul>
 
 <ul>
-    <li><a href="{{ url_for('show_social_network') }}">🌍🔗 社交关系网络 🌍🔗</a></li>
-    <li><a href="{{ url_for('show_messages') }}">📢💬 用户传播性分析 📢💬</a></li>
-    <li><a href="{{ url_for('show_centrality') }}">🎯📍 用户中心性分析 🎯📍</a></li>
-    <li><a href="{{ url_for('show_shortest_way') }}">🛤️⚡ 最短社交路径 🛤️⚡</a></li>
+    <li><a style="color: aliceblue;" href="{{ url_for('show_social_network') }}">🌍🔗 社交关系网络 🌍🔗</a></li>
+    <li><a style="color: aliceblue;" href="{{ url_for('show_messages') }}">📢💬 用户传播性分析 📢💬</a></li>
+    <li><a style="color: aliceblue;" href="{{ url_for('show_centrality') }}">🎯📍 用户中心性分析 🎯📍</a></li>
+    <li><a style="color: aliceblue;" href="{{ url_for('show_shortest_way') }}">🛤️⚡ 最短社交路径 🛤️⚡</a></li>
 </ul>
 
 <ul>
-    <li><a href="{{ url_for('show_friend_distribution') }}">👥📊 好友量分布 👥📊</a></li>
-    <li><a href="{{ url_for('show_by_timestamp') }}">⏳📅 消息互动趋势 ⏳📅</a></li>
-    <li><a href="{{ url_for('show_user_behavior') }}">🔍📈 用户行为分析 🔍📈</a></li>
+    <li><a style="color: aliceblue;" href="{{ url_for('show_friend_distribution') }}">👥📊 好友量分布 👥📊</a></li>
+    <li><a style="color: aliceblue;" href="{{ url_for('show_by_timestamp') }}">⏳📅 消息互动趋势 ⏳📅</a></li>
+    <li><a style="color: aliceblue;" href="{{ url_for('show_user_behavior') }}">🔍📈 用户行为分析 🔍📈</a></li>
 </ul>
 
         </br>

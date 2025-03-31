@@ -5,19 +5,17 @@ body {
     text-align: center;
     color: #333;
     margin: 0;
-    padding: 0;
-    background: linear-gradient(to bottom, #ecc7df, #8dc4ea); /* 白色到淡蓝色渐变 */
+    padding: 0; 
 }
 
 
 /* 顶部标题 */
 h1 {
-    background: linear-gradient(135deg, #ecc7df, #6dd5fa);
+    background: linear-gradient(135deg, #ffffff10, #1303381c);
     color: white;
     padding: 20px;
     margin: 0;
     font-size: 28px;
-    font-weight: 600;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     animation: float 3s ease-in-out infinite;
 }
@@ -113,8 +111,8 @@ nav ul li a {
     padding: 12px 20px;
     border-radius: 30px;
     transition: 0.4s;
-    background: linear-gradient(135deg, #efc0dc, #87c0e8);
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+    background: linear-gradient(135deg, #ffffff10, #1303381c);
+    box-shadow: 0 3px 8px rgba(199, 199, 199, 0.39);
     display: inline-block;
     position: relative;
     overflow: hidden;
@@ -138,7 +136,7 @@ nav ul li a:active, #back-button:active {
     margin: 20px;
     padding: 12px 25px;
     font-size: 16px;
-    background: linear-gradient(135deg, #e74c3c, #ff6b6b);
+    background: linear-gradient(135deg, #e74d3c1c, #ff6b6b33);
     color: white;
     border: none;
     border-radius: 30px;
@@ -148,7 +146,7 @@ nav ul li a:active, #back-button:active {
 }
 
 #back-button:hover {
-    background: linear-gradient(135deg, #c0392b, #e74c3c);
+    background: linear-gradient(135deg, #9c190b7c, #f59b91);
     transform: translateY(-3px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
@@ -161,7 +159,7 @@ nav ul li a:active, #back-button:active {
     max-height: 95vh; /* 设置最大高度，防止超出屏幕 */
     margin: 20px auto;
     border-radius: 15px;
-    background: white;
+    background: rgba(255, 255, 255, 0.959);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     opacity: 0;
     transform: scale(0.8);
@@ -180,7 +178,7 @@ label {
     margin: 0;
     max-height: 500px;
     overflow-y: auto;
-    background-color: #f4f4f4;
+    background-color: #f4f4f4c5;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
@@ -210,7 +208,7 @@ label {
 
 /* 复选框选中时的样式 */
 #community-list input[type="checkbox"]:checked {
-    background-color: #4CAF50;  /* 选中时背景色 */
+    background-color: #4c90af;  /* 选中时背景色 */
 }
 
 /* 复选框悬停效果 */
@@ -294,7 +292,7 @@ select:focus {
 #top10-container {
     margin-top: 20px;
     padding: 20px;
-    background: white;
+    background: rgba(255, 255, 255, 0.726);
     border-radius: 15px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     width: 50%;
