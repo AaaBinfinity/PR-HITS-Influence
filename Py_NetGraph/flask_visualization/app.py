@@ -1,8 +1,6 @@
 import logging
 from flask import Flask, render_template, request, jsonify
-from analysis.network_analysis import *
-from analysis.shortest_path import *
-from analysis.time_series_analysis import *
+from analysis import *
 
 # 设置日志配置
 logger = logging.getLogger()
