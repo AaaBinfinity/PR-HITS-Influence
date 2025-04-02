@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="../assets/css/chat.css" />
+    <link rel="stylesheet" href="../assets/css/keyframes.css" />
+
+    <link rel="stylesheet" href="../assets/css/bgc.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>聊天</title>
+  </head>
+  <body>
+    <iframe src="../assets/星空.html"></iframe>
+    <h2>与 <span id="friendName"></span> 的聊天</h2>
+    <br />
+
+    <a href="./home.html">返回好友列表</a>
+    <br />
+
+    <button onclick="logout()">退出登录</button>
+
+    <div id="messages" style="max-height: 400px; overflow-y: auto">
+      <!-- 聊天消息列表 -->
+    </div>
+
+    <h3>发送消息</h3>
+    <form id="chatForm">
+      <label>内容：<input type="text" id="messageContent" required /></label>
+      <br />
+      <button type="submit">发送</button>
+    </form>
+    <p id="chatMessage"></p>
+
+    <script>
+      // 获取好友用户名
+      const friendUsername = new URLSearchParams(window.location.search).get(
+        "friend"
+      );
+      const username = localStorage.getItem("username");
+      const token = localStorage.getItem("token");
+
+      if (!username || !token || !friendUsername) {
+        window.location.href = "login.html";
+      } else {
+        document.getElementById("friendName").textContent = friendUsername;
+      }
+
+      // 退出登录
+      function logout() {
+        localStorage.removeItem("username");
+        localStorage.removeItem("token");
+        window.location.href = "./login.html";
+      }
+
+      // 发送消息
+      document.getElementById("chatForm").onsubmit = async function (event) {
+        event.preventDefault();
+        const content = document.getElementById("messageContent").value;
+
+        const response = await fetch("http://1.92.109.205:8080/chat/send", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            sender: username,
+            receiver: friendUsername,
+            content,
+          }),
+        });
+
+        const result = await response.json();
+        document.getElementById("chatMessage").textContent =
+          result.message || result.error;
+
+        if (response.ok) {
+          displayMessage(content, "right"); // "right" 表示消息是发送方的消息
+          document.getElementById("messageContent").value = ""; // 清空输入框
+          scrollToBottom(); // 滚动到最底部
+        }
+      };
+
+      // 显示消息
+      function displayMessage(content, side = "left") {
+        const messagesDiv = document.getElementById("messages");
+        const messageDiv = document.createElement("div");
+        messageDiv.textContent = `${
+          side === "right" ? username : friendUsername
+        }: ${content}`;
+        messageDiv.style.textAlign = side === "right" ? "right" : "left";
+        messagesDiv.appendChild(messageDiv);
+      }
+
+      // 获取聊天历史记录
+      async function loadChatHistory() {
+        try {
+          // 请求从sender到receiver的消息
+          const response1 = await fetch(
+            `http://1.92.109.205:8080/chat/history?senderUsername=${username}&receiverUsername=${friendUsername}`
+          );
+          const messagesFromSenderToReceiver = await response1.json();
+
+          // 请求从receiver到sender的消息
+          const response2 = await fetch(
+            `http://1.92.109.205:8080/chat/history?senderUsername=${friendUsername}&receiverUsername=${username}`
+          );
+          const messagesFromReceiverToSender = await response2.json();
+
+          // 合并消息并根据时间戳排序
+          const allMessages = [
+            ...messagesFromSenderToReceiver.map((msg) => ({
+              ...msg,
+              side: "right",
+            })),
+            ...messagesFromReceiverToSender.map((msg) => ({
+              ...msg,
+              side: "left",
+            })),
+          ];
+
+          allMessages.sort(
+            (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
+          );
+
+          // 清空已有消息并展示最新消息
+          const messagesDiv = document.getElementById("messages");
+          messagesDiv.innerHTML = ""; // 清空已有消息
+
+          // 分别展示发送方和接收方的消息
+          allMessages.forEach((message) => {
+            displayMessage(message.content, message.side);
+          });
+
+          scrollToBottom(); // 滚动到最底部
+        } catch (error) {
+          document.getElementById("chatMessage").textContent =
+            "加载聊天记录失败";
+          console.error("加载聊天记录失败:", error);
+        }
+      }
+
+      // 滚动到聊天框最底部
+      function scrollToBottom() {
+        const messagesDiv = document.getElementById("messages");
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      }
+
+      // 每5秒请求一次聊天记录更新
+      setInterval(loadChatHistory, 15000); // 每15秒获取一次聊天记录
+
+      // 页面加载时获取聊天记录
+      loadChatHistory();
+    </script>
+  </body>
+</html>

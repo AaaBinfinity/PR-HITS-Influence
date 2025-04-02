@@ -1,0 +1,113 @@
+/* 页面整体样式 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #193f64, #1e1a53);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+h2 {
+  font-size: 32px;
+  color: #fff;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  margin-bottom: 40px;
+}
+
+/* 登录表单 */
+form {
+  background-color: rgba(255, 255, 255, 0.233);
+  border-radius: 10px;
+  padding: 30px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+form label {
+  font-size: 18px;
+  color: #333;
+}
+
+form input {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #cccccc73;
+  transition: border-color 0.3s ease;
+}
+
+form input:focus {
+  border-color: #3498db;
+  outline: none;
+}
+
+/* 登录按钮 */
+button {
+  background-color: #0a0f47;
+  color: white;
+  padding: 12px 25px;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+  background-color: #010516;
+  transform: scale(1.05);
+}
+
+button:focus {
+  outline: none;
+}
+
+/* 错误/成功提示信息 */
+#message {
+  font-size: 16px;
+  color: #330b06;
+  text-align: center;
+  margin-top: 15px;
+}
+
+/* 注册链接 */
+a {
+  color: #3498db;
+  text-align: center;
+  font-size: 16px;
+  text-decoration: none;
+  margin-top: 20px;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  body {
+    padding: 20px;
+  }
+
+  h2 {
+    font-size: 28px;
+  }
+
+  form {
+    width: 100%;
+    max-width: 100%;
+  }
+}

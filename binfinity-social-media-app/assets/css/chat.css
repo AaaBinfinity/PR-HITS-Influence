@@ -1,0 +1,175 @@
+/* 基本页面布局 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(45deg, #6e7e8a, #a8c0d2);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 20px;
+}
+
+h2 {
+  font-size: 32px;
+  color: #333;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  margin-top: 50px;
+}
+
+button {
+  background-color: #0a0f47;
+  color: white;
+  padding: 12px 25px;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+  background-color: #010516;
+  transform: scale(1.05);
+}
+
+button:focus {
+  outline: none;
+}
+
+/* 聊天消息列表 */
+#messages {
+  background-color: rgba(88, 88, 88, 0.137);
+  border-radius: 15px;
+  padding: 20px;
+  max-width: 1000px;
+  width: 100%;
+  max-height: 500px;
+  overflow-y: auto;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+  margin-top: 40px;
+  margin-bottom: 20px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* 聊天消息条目的样式 */
+#messages div {
+  padding: 12px 20px;
+  border-radius: 30px;
+  font-size: 16px;
+  max-width: 70%;
+  word-wrap: break-word;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* 发送方消息 */
+#messages div.right {
+  background-color: #007bff;
+  color: white;
+  align-self: flex-end;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+#messages div.right:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+/* 接收方消息 */
+#messages div.left {
+  background-color: #f1f1f1;
+  color: #333;
+  align-self: flex-start;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+#messages div.left:hover {
+  background-color: #e0e0e0;
+  transform: scale(1.05);
+}
+
+/* 输入框及表单样式 */
+#chatForm {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  padding: 15px;
+  background-color: rgba(170, 170, 170, 0.199);
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+}
+
+#messageContent {
+  width: 80%;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 30px;
+  margin-right: 10px;
+  transition: border-color 0.3s ease;
+}
+
+#messageContent:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+button[type="submit"] {
+  background-color: #4f4ceb;
+  color: white;
+  padding: 12px 25px;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button[type="submit"]:hover {
+  background-color: #021a46;
+  transform: scale(1.05);
+}
+
+/* 聊天记录消息提示 */
+#chatMessage {
+  text-align: center;
+  font-size: 16px;
+  color: #d9534f;
+  margin-top: 20px;
+}
+a {
+  color: #013152;
+  text-align: center;
+  font-size: 16px;
+  text-decoration: none;
+  margin-top: 20px;
+}
+
+/* 自定义滚动条 */
+#messages::-webkit-scrollbar {
+  width: 10px;
+}
+
+#messages::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+#messages::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+#messages::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

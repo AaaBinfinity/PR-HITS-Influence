@@ -1,0 +1,131 @@
+/* 页面整体样式 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+h2 {
+  font-size: 32px;
+  color: #fff;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  margin-bottom: 30px;
+}
+
+h3 {
+  font-size: 24px;
+  color: #fff;
+  margin-top: 30px;
+  margin-bottom: 15px;
+}
+
+/* 好友列表 */
+#friendsList {
+  background-color: rgba(255, 255, 255, 0.233);
+  border-radius: 10px;
+  padding: 15px;
+  list-style-type: none;
+  width: 100%;
+  max-width: 500px;
+  margin-bottom: 30px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+#friendsList li {
+  padding: 10px;
+  font-size: 18px;
+  color: #333;
+  background-color: rgba(255, 255, 255, 0.644);
+  margin-bottom: 10px;
+  border-radius: 10px;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+#friendsList li:hover {
+  background-color: #e9ecef;
+}
+
+#friendsList li:active {
+  transform: scale(0.98);
+}
+
+/* 添加好友表单 */
+form {
+  background-color: rgba(255, 255, 255, 0.233);
+  border-radius: 10px;
+  padding: 20px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+form label {
+  font-size: 18px;
+  color: #333;
+}
+
+form input {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  transition: border-color 0.3s ease;
+}
+
+form input:focus {
+  border-color: #3498db;
+  outline: none;
+}
+
+/* 添加好友操作的提示信息 */
+#addFriendMessage {
+  font-size: 16px;
+  color: #e74c3c;
+  text-align: center;
+  margin-top: 15px;
+}
+
+button {
+  background-color: #0a0f47;
+  color: white;
+  padding: 12px 25px;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+  background-color: #010516;
+  transform: scale(1.05);
+}
+
+button:focus {
+  outline: none;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  body {
+    padding: 20px;
+  }
+
+  h2 {
+    font-size: 28px;
+  }
+
+  h3 {
+    font-size: 20px;
+  }
+
+  #friendsList,
+  form {
+    width: 100%;
+    max-width: 100%;
+  }
+}

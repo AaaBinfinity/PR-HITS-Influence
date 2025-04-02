@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>注册</title>
+    <link rel="stylesheet" href="../assets/css/keyframes.css" />
+    <link rel="stylesheet" href="../assets/css/register.css" />
+    <link rel="stylesheet" href="../assets/css/bgc.css" />
+  </head>
+  <body>
+    <iframe src="../assets/星空.html"></iframe>
+    <h2>注册</h2>
+    <form id="registerForm">
+      <label style="color: rgba(240, 248, 255, 0.747)"
+        >用户名：<input type="text" id="username" required /></label
+      ><br />
+      <label style="color: rgba(240, 248, 255, 0.747)"
+        >密码：<input type="password" id="password" required /></label
+      ><br />
+      <button type="submit">注册</button>
+      <a href="login.html">已有账号？去登录</a><a href="../index.html">BACK </a>
+    </form>
+    <p id="message"></p>
+
+    <script>
+      document.getElementById("registerForm").onsubmit = async function (
+        event
+      ) {
+        event.preventDefault();
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        const response = await fetch("http://1.92.109.205:8080/auth/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password }),
+        });
+
+        const result = await response.json();
+        document.getElementById("message").textContent =
+          result.message || result.error;
+        if (response.ok)
+          setTimeout(() => (window.location.href = "login.html"), 1000);
+      };
+    </script>
+  </body>
+</html>
+<!-- /usr/software/jdk-21.0.5/bin -->

@@ -1,0 +1,105 @@
+/* 页面加载动画 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+body {
+  animation: fadeIn 1s ease-out;
+}
+
+/* 按钮呼吸灯效 */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 10px rgba(56, 0, 8, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(38, 29, 73, 0.9);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(255, 107, 129, 0.5);
+  }
+}
+
+button {
+  animation: pulse 1.5s infinite alternate;
+}
+
+/* 输入框聚焦动画 */
+@keyframes focusGlow {
+  from {
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0);
+  }
+  to {
+    box-shadow: 0 0 15px rgba(52, 152, 219, 0.7);
+  }
+}
+
+form input:focus {
+  animation: focusGlow 0.3s ease-out forwards;
+}
+
+/* 标题渐变色动画 */
+@keyframes gradientText {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+h2 {
+  background: linear-gradient(
+    45deg,
+    #8597be,
+    #5b3fa8,
+    #1b9494,
+    #0066e4,
+    #9f80dd
+  );
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientText 3s infinite alternate ease-in-out;
+}
+
+/* 表单弹性浮动 */
+@keyframes floatUp {
+  0% {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+form {
+  animation: floatUp 1s ease-out 0.5s both;
+}
+
+/* 注册链接闪烁 */
+@keyframes blink {
+  0%,
+  100% {
+    color: #4ba9e9;
+  }
+  50% {
+    color: #3497da;
+  }
+}
+
+a {
+  animation: blink 1.5s infinite;
+}
