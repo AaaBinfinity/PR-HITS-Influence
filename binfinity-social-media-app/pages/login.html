@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>登录</title>
+    <link rel="stylesheet" href="../assets/css/login.css" />
+    <link rel="stylesheet" href="../assets/css/keyframes.css" />
+    <link rel="stylesheet" href="../assets/css/bgc.css" />
+  </head>
+  <body>
+    <iframe src="../assets/星空.html"></iframe>
+    <h2>登录</h2>
+    <form id="loginForm">
+      <label style="color: rgba(240, 248, 255, 0.747)"
+        >用户名：<input type="text" id="username" required /></label
+      ><br />
+      <label style="color: rgba(240, 248, 255, 0.747)"
+        >密码：<input type="password" id="password" required /></label
+      ><br />
+      <button type="submit">登录</button
+      ><a href="register.html">没有账号？去注册</a>
+
+      <a href="../index.html">BACK </a>
+    </form>
+    <p id="message"></p>
+
+    <script>
+      document.getElementById("loginForm").onsubmit = async function (event) {
+        event.preventDefault();
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        const response = await fetch("http://1.92.109.205:8080/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password }),
+        });
+
+        const result = await response.json();
+        document.getElementById("message").textContent =
+          result.error || "登录成功，即将跳转...";
+
+        if (response.ok) {
+          localStorage.setItem("username", result.username);
+          localStorage.setItem("token", result.token);
+          setTimeout(() => (window.location.href = "home.html"), 1000);
+        }
+      };
+    </script>
+  </body>
+</html>

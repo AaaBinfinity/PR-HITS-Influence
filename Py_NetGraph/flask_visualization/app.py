@@ -62,7 +62,7 @@ def show_by_timestamp():
 @app.route('/api/messages_pagerank', methods=['GET'])
 def get_messages_pagerank():
     logger.info('正在获取消息 PageRank 数据')
-    data = analyze_messages_pagerank()
+    data = analyze_user_interactions_pagerank()
     logger.info('消息 PageRank 数据获取成功')
     return jsonify(data)
 

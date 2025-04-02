@@ -1,0 +1,54 @@
+-- auto-generated definition
+create table friends
+(
+    user_id   bigint not null,
+    friend_id bigint not null,
+    primary key (user_id, friend_id),
+    constraint friends_ibfk_1
+        foreign key (user_id) references users (id)
+            on delete cascade,
+    constraint friends_ibfk_2
+        foreign key (friend_id) references users (id)
+            on delete cascade
+);
+
+create index friend_id
+    on friends (friend_id);
+
+
+-- auto-generated definition
+create table messages
+(
+    id          bigint auto_increment
+        primary key,
+    sender_id   bigint                              not null,
+    receiver_id bigint                              not null,
+    content     text                                not null,
+    timestamp   timestamp default CURRENT_TIMESTAMP null,
+    constraint messages_ibfk_1
+        foreign key (sender_id) references users (id)
+            on delete cascade,
+    constraint messages_ibfk_2
+        foreign key (receiver_id) references users (id)
+            on delete cascade
+);
+
+create index receiver_id
+    on messages (receiver_id);
+
+create index sender_id
+    on messages (sender_id);
+
+-- auto-generated definition
+create table users
+(
+    id       bigint auto_increment
+        primary key,
+    username varchar(50)  not null,
+    password varchar(255) not null,
+    constraint username
+        unique (username)
+);
+
+
+
