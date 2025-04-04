@@ -16,20 +16,23 @@
 
     <div id="user-chart" ></div>
 
-    <table border="1">
-        <thead>
-            <tr>
-                <th>用户ID</th>
-                <th>用户名</th>
-                <th>消息数</th>
-                <th>最活跃时间段</th>
-            </tr>
-        </thead>
-        <tbody id="user-table">
-            <!-- 用户行为数据会动态加载 -->
-        </tbody>
-    </table>
+    <table id="user-table">
+    <thead>
+        <tr>
+            <th>用户ID</th>
+            <th>用户名</th>
+            <th>消息数</th>
+            <th>活跃时段</th>
+        </tr>
+    </thead>
+    <tbody></tbody>  <!-- 确保这里有 tbody -->
+</table>
 
+    <div id="pagination" style="color: #3070c5">
+        <button id="prev-page">上一页</button>
+        <span id="page-num">第 1 页</span>
+        <button id="next-page">下一页</button>
+    </div>
     <script src="{{ url_for('static', filename='user_behavior.js') }}"></script>
 </body>
 </html>

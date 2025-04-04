@@ -47,7 +47,7 @@ table {
     width: 80%;
     margin: 20px auto;
     border-collapse: collapse;
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.75);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     overflow: hidden;
@@ -55,7 +55,7 @@ table {
 
 /* 表头样式 */
 thead {
-    background-color: #007bff;
+    background-color: rgba(0, 68, 143, 0.35);
     color: white;
 }
 
@@ -159,7 +159,7 @@ nav ul li a:active, #back-button:active {
     max-height: 95vh; /* 设置最大高度，防止超出屏幕 */
     margin: 20px auto;
     border-radius: 15px;
-    background: rgba(255, 255, 255, 0.959);
+    background: rgba(255, 255, 255, 0.89);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     opacity: 0;
     transform: scale(0.8);

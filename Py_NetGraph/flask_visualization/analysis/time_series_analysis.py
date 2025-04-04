@@ -83,7 +83,7 @@ def analyze_user_behavior():
 
     # 统计每小时的用户活跃度
     df.set_index("beijing_time", inplace=True)
-    user_activity = df.groupby([pd.Grouper(freq='H'), 'user_id']).size().unstack(fill_value=0)
+    user_activity = df.groupby([pd.Grouper(freq='h'), 'user_id']).size().unstack(fill_value=0)
 
     # 找出每个用户最活跃的时间段（发送消息最多的小时）
     user_active_period = user_activity.idxmax(axis=0)
