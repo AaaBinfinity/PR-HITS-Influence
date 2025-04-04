@@ -2,22 +2,19 @@ import logging
 from flask import Flask, render_template, request, jsonify
 from analysis import *
 
-# 设置日志配置
+# 日志配置
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-# 文件处理器，将日志记录到文件
 file_handler = logging.FileHandler('app.log')
 file_handler.setLevel(logging.INFO)
 file_formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
 file_handler.setFormatter(file_formatter)
 
-# 控制台处理器，将日志输出到终端
 console_handler = logging.StreamHandler()
 console_handler.setLevel(logging.INFO)
 console_handler.setFormatter(file_formatter)
 
-# 将处理器添加到日志器中
 logger.addHandler(file_handler)
 logger.addHandler(console_handler)
 
